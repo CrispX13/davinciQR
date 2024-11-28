@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form Handling</title>
+</head>
+
+<body>
+    <!-- Интеграция формы Bitrix24 -->
+    <script data-b24-form="inline/17/p4st2o"
+        data-skip-moving="true">(function (w, d, u) { var s = d.createElement('script'); s.async = true; s.src = u + '?' + (Date.now() / 180000 | 0); var h = d.getElementsByTagName('script')[0]; h.parentNode.insertBefore(s, h); })(window, document, 'https://cdn-ru.bitrix24.ru/b30992804/crm/form/loader_17.js');</script>
+
+    <!-- Скрипт для обработки динамической формы -->
+    <script>
+        // Функция для получения текущего времени в формате hh:mm
+        function getCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0'); // Добавляем ведущий 0 для часов
+            const minutes = String(now.getMinutes()).padStart(2, '0'); // Добавляем ведущий 0 для минут
+            return `${hours}:${minutes}`;
+        }
+
+        // Функция для заполнения второго input
+        function fillSecondInput() {
+            const inputs = document.querySelectorAll('.b24-form-control');
+            if (inputs.length > 1) {
+                const secondInput = inputs[1]; // Находим второй input
+                secondInput.value = getCurrentTime(); // Устанавливаем значение текущего времени
+
+                // Генерируем событие input, чтобы форма "заметила" изменения
+                const event = new Event('input', { bubbles: true });
+                secondInput.dispatchEvent(event);
+
+                observer.disconnect(); // Отключаем наблюдателя после выполнения
+            }
+        }
+
+        // Создаем MutationObserver для отслеживания изменений в DOM
+        const observer = new MutationObserver(() => {
+            fillSecondInput();
+        });
+
+        // Настраиваем наблюдение за изменениями в body
+        observer.observe(document.body, {
+            childList: true, // Следим за добавлением/удалением дочерних элементов
+            subtree: true,   // Следим за всеми вложенными элементами
+        });
+
+
+    </script>
+</body>
+
+</html>
